@@ -18,4 +18,3 @@ jenkins:
       - 'java-1.7.0-openjdk-devel'
       - 'git-all'
       - 'curl'
-      - 'python-apt'
