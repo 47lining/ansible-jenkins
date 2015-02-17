@@ -5,7 +5,8 @@
   when: jenkins_install.changed
 
 - name: "Create Jenkins CLI destination directory: {{ jenkins_dest }}"
-  file: path={{ jenkins_dest }} state=directory
+  file: path={{ jenkins_dest }} state=directory owner=jenkins group=jenkins mode=0755
+  sudo: yes
 
 - name: Get Jenkins CLI
   get_url: url=http://localhost:8080/jnlpJars/jenkins-cli.jar dest={{ jenkins.cli_dest }} mode=0440
@@ -15,7 +16,7 @@
   delay: 10
 
 - name: Get Jenkins updates
-  get_url: url=http://updates.jenkins-ci.org/update-center.json dest={{ jenkins.updates_dest }} thirsty=yes mode=0440 timeout=30
+  get_url: url=http://updates.jenkins-ci.org/update-center.json dest={{ jenkins.updates_dest }} timeout=30
   register: jenkins_updates
 
 - name: Update-center Jenkins
