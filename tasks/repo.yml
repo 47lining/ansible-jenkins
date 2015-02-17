@@ -1,9 +1,19 @@
 ---
 - name: Install python-software-properties
   apt: name=python-software-properties state=installed update_cache=yes cache_valid_time=86400
+  when: ansible_os_family == 'Debian'
+
+- name: Install python-software-properties
+  yum: name=python-software-properties state=installed update_cache=yes cache_valid_time=86400
+  when: ansible_os_family == 'RedHat'
 
 - name: Install python-pycurl
   apt: name=python-pycurl state=installed
+  when: ansible_os_family == 'Debian'
+
+- name: Install python-pycurl
+  yum: name=python-pycurl state=installed
+  when: ansible_os_family == 'RedHat'
 
 - name: Add jenkins apt-key
   apt_key: data="{{ lookup('file', 'jenkins-ci.org.key') }}" state=present

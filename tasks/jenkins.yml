@@ -3,9 +3,20 @@
 
 - include: dependencies_deb.yml
 
-- name: Install Jenkins
+- name: Install Redhat dependencies
+  yum: name={{ item }} state=installed
+  when: ansible_os_family == 'RedHat'
+  with_items: jenkins.RedHat.dependencies
+
+- name: Install Jenkins (Debian)
   apt: name=jenkins state=latest
   register: jenkins_install
+  when: ansible_os_family == 'Debian'
+
+- name: Install Jenkins (RedHat)
+  yum: name=jenkins state=latest
+  register: jenkins_install
+  when: ansible_os_family == 'RedHat'
 
 - include: cli.yml
 

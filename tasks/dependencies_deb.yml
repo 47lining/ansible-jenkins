@@ -1,4 +1,5 @@
 ---
-- name: Install dependencies
+- name: Install Debian dependencies
   apt: name={{ item }} state=installed
+  when: ansible_os_family == 'Debian'
   with_items: jenkins.deb.dependencies
