@@ -21,10 +21,14 @@
 
 - name: Add Jenkins Yum repo
   sudo: yes
-  command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+  command: wget -O /etc/yum.repos.d/jenkins.repo {{ jenkins.RedHat.repo}}
+  when: ansible_os_family == 'RedHat'
+
+- name: Copy yum key
+  copy: src=jenkins-ci.org.key dest=/tmp/jenkins-ci.org.key
   when: ansible_os_family == 'RedHat'
 
 - name: Add jenkins yum key
   sudo: yes
-  command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+  command: rpm --import /tmp/jenkins-ci.org.key
   when: ansible_os_family == 'RedHat'
