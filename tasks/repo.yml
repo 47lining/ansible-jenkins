@@ -18,3 +18,13 @@
 - name: Add Jenkins repository
   apt_repository: repo='{{ jenkins.deb.repo }}' state=present update_cache=yes
   when: ansible_os_family == 'Debian'
+
+- name: Add Jenkins Yum repo
+  sudo: yes
+  command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+  when: ansible_os_family == 'RedHat'
+
+- name: Add jenkins yum key
+  sudo: yes
+  command: rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
+  when: ansible_os_family == 'RedHat'
