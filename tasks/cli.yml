@@ -13,11 +13,21 @@
   register: jenkins_local_cli
   until: "'OK' in jenkins_local_cli.msg or 'file already exists' in jenkins_local_cli.msg"
   retries: 5
+  sudo: yes
   delay: 10
+
+- name: "Modify Jenkins CLI permissions: {{ jenkins.cli_dest }}"
+  file: path={{ jenkins.cli_dest }} state=file owner=jenkins group=jenkins mode=0755
+  sudo: yes
 
 - name: Get Jenkins updates
   get_url: url=http://updates.jenkins-ci.org/update-center.json dest={{ jenkins.updates_dest }} timeout=30
   register: jenkins_updates
+  sudo: yes
+
+- name: "Modify Jenkins Updates permissions: {{ jenkins.updates_dest }}"
+  file: path={{ jenkins.updates_dest }} state=present owner=jenkins group=jenkins mode=0755
+  sudo: yes
 
 - name: Update-center Jenkins
   shell: "cat {{ jenkins.updates_dest }} | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"

@@ -2,12 +2,19 @@
 
 - name: Configure Jenkins Port
   when: port is defined
-  lineinfile: dest=/etc/default/jenkins regexp=^HTTP_PORT= line=HTTP_PORT={{port}}
+  sudo: yes
+  lineinfile: dest=/etc/default/jenkins regexp=^HTTP_PORT= line='HTTP_PORT={{port}}' state=present create=yes
 
 - name: Configure Jenkins Prefix
   when: prefix is defined
-  lineinfile: dest=/etc/default/jenkins regexp=^PREFIX= line=PREFIX={{prefix}}
+  sudo: yes
+  lineinfile: dest=/etc/default/jenkins regexp=^PREFIX= line='PREFIX={{prefix}}' state=present create=yes
+
+- name: "Jenkins Default permissions: /etc/default/jenkins"
+  file: path=/etc/default/jenkins state=file owner=jenkins group=jenkins mode=0755
+  sudo: yes
 
 - name: Configure Jenkins E-mail
   when: email is defined
+  sudo: yes
   template: src=hudson.tasks.Mailer.xml.j2 dest={{ jenkins_lib }}/hudson.tasks.Mailer.xml owner=jenkins group=jenkins mode=0644
