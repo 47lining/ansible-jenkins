@@ -4,12 +4,12 @@
   wait_for: port=8080 delay={{ startup_delay_s | default(10) }}
   when: jenkins_install.changed
 
-- name: "Create Jenkins CLI destination directory: {{ jenkins_dest }}"
-  file: path={{ jenkins_dest }} state=directory owner=jenkins group=jenkins mode=0755
+- name: "Create Jenkins CLI destination directory: {{ jenkins.dest }}"
+  file: path={{ jenkins.dest }} state=directory owner=jenkins group=jenkins mode=0755
   sudo: yes
 
 - name: Get Jenkins CLI
-  get_url: url=http://localhost:8080/jnlpJars/jenkins-cli.jar dest={{ jenkins.cli_dest }} mode=0440
+  get_url: url='{{ jenkins.localurl }}/jnlpJars/jenkins-cli.jar' dest={{ jenkins.cli_dest }} mode=0440
   register: jenkins_local_cli
   until: "'OK' in jenkins_local_cli.msg or 'file already exists' in jenkins_local_cli.msg"
   retries: 5
@@ -30,7 +30,7 @@
   sudo: yes
 
 - name: Update-center Jenkins
-  shell: "cat {{ jenkins.updates_dest }} | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"
+  shell: "cat {{ jenkins.updates_dest }} | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- '{{ jenkins.localurl }}/updateCenter/byId/default/postBack'"
   when: jenkins_updates.changed
   notify:
     - 'Restart Jenkins'

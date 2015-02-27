@@ -1,9 +1,9 @@
 ---
 
+  # when: port is defined
 - name: Configure Jenkins Port
-  when: port is defined
   sudo: yes
-  lineinfile: dest=/etc/default/jenkins regexp=^HTTP_PORT= line='HTTP_PORT={{port}}' state=present create=yes
+  lineinfile: dest=/etc/default/jenkins regexp=^HTTP_PORT= line='HTTP_PORT=-1' state=present create=yes
 
 - name: Configure Jenkins Prefix
   when: prefix is defined
@@ -17,4 +17,4 @@
 - name: Configure Jenkins E-mail
   when: email is defined
   sudo: yes
-  template: src=hudson.tasks.Mailer.xml.j2 dest={{ jenkins_lib }}/hudson.tasks.Mailer.xml owner=jenkins group=jenkins mode=0644
+  template: src=hudson.tasks.Mailer.xml.j2 dest={{ jenkins.lib }}/hudson.tasks.Mailer.xml owner=jenkins group=jenkins mode=0644
