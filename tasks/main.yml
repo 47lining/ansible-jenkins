@@ -1,5 +1,5 @@
 ---
-- name: not yet implemented
+- name: Starting ansible-jenkins
   debug: msg="Starting ansible-jenkins"
 
 - include: jenkins.yml tags=jenkins

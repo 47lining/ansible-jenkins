@@ -2,4 +2,4 @@
 - name: Restart Jenkins
   sudo: yes
   ignore_errors: true
-  command: java -jar {{ jenkins.cli_dest }} -s {{ jenkins.localurl }} safe-restart
+  command: java -jar {{ jenkins.cli_dest }} -s http://localhost:8080 safe-restart
