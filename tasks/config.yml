@@ -1,7 +1,6 @@
 ---
 
 # when: port is defined
-# TODO - many of the REST API calls have 8080 port hard-coded
 - name: Configure Jenkins Port
   when: port is defined and ansible_os_family == 'Debian'
   sudo: yes
@@ -16,6 +15,32 @@
   when: prefix is defined and ansible_os_family == 'Debian'
   sudo: yes
   lineinfile: dest='{{ jenkins.deb.conf_dir }}/jenkins' regexp=^PREFIX= line='PREFIX={{prefix}}' state=present create=yes
+
+- name: Configure Jenkins Https Port
+  when: https_port is define and ansible_os_family == 'RedHat'
+  sudo: yes
+  lineinfile:
+    dest='{{ jenkins.RedHat.conf_dir }}/jenkins'
+    regexp=^JENKINS_HTTPS_PORT=
+    line='JENKINS_HTTPS_PORT="{{ https_port }}"'
+    state=present
+    create=yes
+    owner=jenkins
+    group=jenkins
+    mode=0644
+
+- name: Configure Jenkins Https Port
+  when: jenkins_user is defined and ansible_os_family == 'RedHat'
+  sudo: yes
+  lineinfile:
+    dest='{{ jenkins.RedHat.conf_dir }}/jenkins'
+    regexp=^JENKINS_USER=
+    line='JENKINS_USER="{{ jenkins_user }}"'
+    state=present
+    create=yes
+    owner=jenkins
+    group=jenkins
+    mode=0644
 
 - name: "Jenkins Default permissions: {{ jenkins.deb.conf_dir }}/jenkins"
   file: path='{{ jenkins.deb.conf_dir }}/jenkins' state=file owner=jenkins group=jenkins mode=0755

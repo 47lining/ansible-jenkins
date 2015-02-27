@@ -21,6 +21,8 @@
   register: jenkins_install
   when: ansible_os_family == 'RedHat'
 
+- include: config.yml
+
 - name: Startup Jenkins
   sudo: yes
   service: name=jenkins state=started
@@ -28,5 +30,3 @@
 - include: cli.yml
 
 - include: plugins.yml
-
-- include: config.yml
