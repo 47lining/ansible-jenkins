@@ -17,7 +17,7 @@
   lineinfile: dest='{{ jenkins.deb.conf_dir }}/jenkins' regexp=^PREFIX= line='PREFIX={{prefix}}' state=present create=yes
 
 - name: Configure Jenkins Https Port
-  when: https_port is define and ansible_os_family == 'RedHat'
+  when: https_port is defined and ansible_os_family == 'RedHat'
   sudo: yes
   lineinfile:
     dest='{{ jenkins.RedHat.conf_dir }}/jenkins'
@@ -29,7 +29,7 @@
     group=jenkins
     mode=0644
 
-- name: Configure Jenkins Https Port
+- name: Configure Jenkins User
   when: jenkins_user is defined and ansible_os_family == 'RedHat'
   sudo: yes
   lineinfile:
