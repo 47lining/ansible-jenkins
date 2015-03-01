@@ -13,7 +13,7 @@
   sudo: yes
 
 - name: Get Jenkins CLI
-  get_url: url='{{jenkins_url}}/jnlpJars/jenkins-cli.jar' dest={{ jenkins.cli_dest }} mode=0440
+  get_url: url='{{jenkins_url}}/jnlpJars/jenkins-cli.jar' dest={{ jenkins.cli_dest }} mode=0440 validate_certs=no
   register: jenkins_local_cli
   until: "'OK' in jenkins_local_cli.msg or 'file already exists' in jenkins_local_cli.msg"
   retries: 5
@@ -34,7 +34,7 @@
   sudo: yes
 
 - name: Update-center Jenkins
-  shell: "cat {{ jenkins.updates_dest }} | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- '{{jenkins_url}}/updateCenter/byId/default/postBack'"
+  shell: "cat {{ jenkins.updates_dest }} | sed '1d;$d' | curl --insecure -X POST -H 'Accept: application/json' -d @- '{{jenkins_url}}/updateCenter/byId/default/postBack'"
   when: jenkins_updates.changed
   notify:
     - 'Restart Jenkins'
