@@ -1,10 +1,10 @@
 ---
 # Handle plugins
-- name: "{{ startup_delay_s | default(10) }}s delay while starting Jenkins"
+- name: "{{ startup_delay_s | default(10) }}s delay while starting Jenkins on http"
   wait_for: port='{{port}}' delay={{ startup_delay_s | default(10) }}
-  when: port is defined and port != '-1' and jenkins_install.changed
+  when: port is defined and port != -1 and jenkins_install.changed
 
-- name: "{{ startup_delay_s | default(10) }}s delay while starting Jenkins"
+- name: "{{ startup_delay_s | default(10) }}s delay while starting Jenkins on https"
   wait_for: port='{{https_port}}' delay={{ startup_delay_s | default(10) }}
   when: https_port is defined and jenkins_install.changed
 
