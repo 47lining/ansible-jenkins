@@ -3,3 +3,13 @@
   sudo: yes
   ignore_errors: true
   command: java -jar {{ jenkins.cli_dest }} -s '{{jenkins_url}}' -noCertificateCheck safe-restart
+  register: restart_result
+
+# - name: Debug safe-restart
+#   debug: var=restart_result
+
+- name: Restart Jenkins with Authentication
+  sudo: yes
+  ignore_errors: true
+  command: java -jar {{ jenkins.cli_dest }} -s '{{jenkins_url}}' -noCertificateCheck safe-restart --username '{{ jenkins_ui_user }}' --password '{{ jenkins_ui_password }}'
+  when: restart_result.rc is defined and restart_result.rc != 0
