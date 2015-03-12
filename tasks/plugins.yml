@@ -15,7 +15,7 @@
 
 - name: Install/update plugins with authentication
   shell: java -jar {{ jenkins.cli_dest }} -s '{{jenkins_url}}' -noCertificateCheck install-plugin {{ item }} --username '{{ jenkins_ui_user }}' --password '{{ jenkins_ui_password }}'
-  when: plugins_updated.changed and plugins_installed.changed and plugins_installed.stdout.find('{{ item }}') == -1
+  when: plugins_updated.rc is defined and plugins_updated.rc != 0 and plugins_installed.changed and plugins_installed.stdout.find('{{ item }}') == -1
   with_items: plugins
   notify:
     - 'Restart Jenkins'
@@ -34,6 +34,6 @@
 
 - name: Update plugins with authentication
   shell: java -jar '{{ jenkins.cli_dest }}' -s '{{jenkins_url}}' -noCertificateCheck install-plugin {{ plugins_updates.stdout }} --username '{{ jenkins_ui_user }}' --password '{{ jenkins_ui_password }}'
-  when: plugins_updated2.changed and plugins_updated2.rc is defined and plugins_updated2.rc != 0 and plugins_updates.stdout != ''
+  when: plugins_updated2.rc is defined and plugins_updated2.rc != 0 and plugins_updates.stdout != ''
   notify:
     - 'Restart Jenkins'
